@@ -1,9 +1,9 @@
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import useStore from '../store/useStore';
 import { setupWeeklyReminder, requestNotificationPermission } from '../utils/notifications';
 
-const baseNavItems = [
+const navItems = [
   { path: '/', label: '植物', icon: '🌿' },
   { path: '/settings', label: '设置', icon: '⚙️' }
 ];
@@ -11,12 +11,7 @@ const baseNavItems = [
 export default function Layout() {
   const location = useLocation();
   const navigate = useNavigate();
-  const { reminderEnabled, reminderDay, reminderHour, reminderMinute, loadSettings } = useStore();
-  const [isDesktop, setIsDesktop] = useState(false);
-
-  useEffect(() => {
-    setIsDesktop(typeof window !== 'undefined' && typeof window.showDirectoryPicker === 'function');
-  }, []);
+  const { loadSettings } = useStore();
 
   useEffect(() => {
     loadSettings().then(() => {
@@ -35,10 +30,6 @@ export default function Layout() {
       }
     });
   }, []);
-
-  const navItems = isDesktop
-    ? [...baseNavItems, { path: '/import', label: '导入', icon: '📥' }]
-    : baseNavItems;
 
   return (
     <div className="min-h-screen flex flex-col">

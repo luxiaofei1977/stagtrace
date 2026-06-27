@@ -1,11 +1,13 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import useStore from '../store/useStore';
 import PlantCard from '../components/PlantCard';
+import BatchImportModal from '../components/BatchImportModal';
 
 export default function Home() {
   const navigate = useNavigate();
   const { plants, loading, loadPlants, deletePlant } = useStore();
+  const [showBatchImport, setShowBatchImport] = useState(false);
 
   useEffect(() => {
     loadPlants();
@@ -22,12 +24,23 @@ export default function Home() {
       {/* 顶部操作栏 */}
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-lg font-semibold text-fern-900">我的鹿角蕨</h2>
-        <button
-          onClick={() => navigate('/add')}
-          className="btn-primary flex items-center gap-1 text-sm"
-        >
-          <span className="text-lg leading-none">+</span> 添加植物
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => setShowBatchImport(true)}
+            className="btn-secondary flex items-center gap-1 text-sm"
+          >
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
+            </svg>
+            批量导入
+          </button>
+          <button
+            onClick={() => navigate('/add')}
+            className="btn-primary flex items-center gap-1 text-sm"
+          >
+            <span className="text-lg leading-none">+</span> 添加植物
+          </button>
+        </div>
       </div>
 
       {/* 植物列表 */}
@@ -52,6 +65,13 @@ export default function Home() {
             />
           ))}
         </div>
+      )}
+
+      {showBatchImport && (
+        <BatchImportModal
+          onClose={() => setShowBatchImport(false)}
+          onComplete={() => loadPlants()}
+        />
       )}
     </div>
   );

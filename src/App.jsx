@@ -3,7 +3,6 @@ import Layout from './components/Layout';
 import Home from './pages/Home';
 import AddPlant from './pages/AddPlant';
 import PlantDetail from './pages/PlantDetail';
-import Import from './pages/Import';
 import Settings from './pages/Settings';
 
 export default function App() {
@@ -13,7 +12,6 @@ export default function App() {
         <Route path="/" element={<Home />} />
         <Route path="/add" element={<AddPlant />} />
         <Route path="/plant/:id" element={<PlantDetail />} />
-        <Route path="/import" element={<Import />} />
         <Route path="/settings" element={<Settings />} />
       </Route>
     </Routes>
