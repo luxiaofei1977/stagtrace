@@ -25,8 +25,9 @@ export default defineConfig({
         ]
       },
       workbox: {
-        // 关键：navigateFallback 使用 NetworkFirst，确保用户访问时优先拉取最新 HTML
-        // 搭配 autoUpdate：SW 检测到新版本自动 skipWaiting + clients.claim，用户刷新即见新版
+        // 排除 index.html 预缓存，避免 revision 冲突导致 404
+        // HTML 请求由 NetworkFirst 运行时策略接管，优先网络、离线回退缓存
+        globPatterns: ['**/*.{js,css,ico,png,svg,webmanifest}'],
         navigateFallback: null,
         runtimeCaching: [
           {
