@@ -1,0 +1,53 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    -webkit-tap-highlight-color: transparent;
+  }
+  body {
+    overscroll-behavior: none;
+  }
+  input, textarea, select {
+    font-size: 16px;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply bg-fern-600 text-white px-5 py-2.5 rounded-xl font-medium
+           active:bg-fern-700 transition-colors disabled:opacity-50 disabled:pointer-events-none;
+  }
+  .btn-secondary {
+    @apply bg-white text-fern-700 border border-fern-300 px-5 py-2.5 rounded-xl font-medium
+           active:bg-fern-50 transition-colors;
+  }
+  .btn-danger {
+    @apply bg-red-500 text-white px-5 py-2.5 rounded-xl font-medium
+           active:bg-red-600 transition-colors;
+  }
+  .card {
+    @apply bg-white rounded-2xl shadow-sm border border-fern-100 p-4;
+  }
+  .input-field {
+    @apply w-full bg-fern-50 border border-fern-200 rounded-xl px-4 py-2.5
+           text-gray-800 placeholder-gray-400 focus:outline-none focus:border-fern-400
+           focus:ring-2 focus:ring-fern-100 transition-all;
+  }
+  .bottom-sheet {
+    @apply fixed bottom-0 left-0 right-0 bg-white rounded-t-3xl shadow-2xl
+           z-50 transition-transform duration-300 max-h-[85vh] overflow-y-auto;
+  }
+  .timeline-dot {
+    @apply absolute left-0 w-3 h-3 bg-fern-500 rounded-full border-2 border-white
+           shadow-sm transform -translate-x-1/2;
+  }
+  .milestone-dot {
+    @apply absolute left-0 w-4 h-4 bg-amber-400 rounded-full border-2 border-white
+           shadow-md transform -translate-x-1/2 ring-2 ring-amber-200;
+  }
+  .safe-bottom {
+    padding-bottom: env(safe-area-inset-bottom, 16px);
+  }
+}
