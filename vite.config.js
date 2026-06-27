@@ -25,21 +25,38 @@ export default defineConfig({
         ]
       },
       workbox: {
+        // 关键：navigateFallback 使用 NetworkFirst，确保用户访问时优先拉取最新 HTML
+        // 搭配 autoUpdate：SW 检测到新版本自动 skipWaiting + clients.claim，用户刷新即见新版
+        navigateFallback: null,
         runtimeCaching: [
           {
+            // 图片：缓存优先，30 天过期
             urlPattern: /\.(?:png|jpg|jpeg|svg|gif|webp)$/,
             handler: 'CacheFirst',
             options: {
               cacheName: 'images-cache',
-              expiration: { maxEntries: 100, maxAgeSeconds: 60 * 60 * 24 * 30 }
+              expiration: { maxEntries: 200, maxAgeSeconds: 60 * 60 * 24 * 30 }
             }
           },
           {
-            urlPattern: /\.(?:js|css|html)$/,
+            // JS/CSS 构建产物：StaleWhileRevalidate，每次后台更新
+            // precache 已覆盖所有构建产物（含 hash），此处仅兜底非 precache 资源
+            urlPattern: /\.(?:js|css)$/,
             handler: 'StaleWhileRevalidate',
             options: {
               cacheName: 'assets-cache',
               expiration: { maxEntries: 50, maxAgeSeconds: 60 * 60 * 24 * 7 }
+            }
+          },
+          {
+            // HTML 文档请求：NetworkFirst，确保优先从网络获取最新版本
+            // 网络失败时回退到缓存，保证离线可用
+            urlPattern: ({ request }) => request.destination === 'document',
+            handler: 'NetworkFirst',
+            options: {
+              cacheName: 'html-cache',
+              networkTimeoutSeconds: 3,
+              expiration: { maxEntries: 10, maxAgeSeconds: 60 * 60 * 1 }
             }
           }
         ]
