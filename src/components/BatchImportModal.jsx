@@ -34,6 +34,9 @@ export default function BatchImportModal({ onClose, onComplete }) {
     setSelectedFiles(files);
     if (plants.length > 0) {
       setSelectedPlantId(plants[0].id);
+      setPlantMode('existing');
+    } else {
+      setPlantMode('new');
     }
     setStep('config');
   };
