@@ -29,6 +29,10 @@ export default defineConfig({
         // HTML 请求由 NetworkFirst 运行时策略接管，优先网络、离线回退缓存
         globPatterns: ['**/*.{js,css,ico,png,svg,webmanifest}'],
         navigateFallback: null,
+        // SW 激活后立即接管所有页面
+        clientsClaim: true,
+        // 检测到新 SW 立即跳过等待激活
+        skipWaiting: true,
         runtimeCaching: [
           {
             // 图片：缓存优先，30 天过期

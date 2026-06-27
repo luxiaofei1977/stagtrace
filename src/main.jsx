@@ -1,18 +1,18 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
 import { useRegisterSW } from 'virtual:pwa-register/react';
 import App from './App';
 import './index.css';
 
-// SW 更新提示组件（autoUpdate 模式下静默更新 + 完成后提示刷新）
+// SW 静默更新组件：页面加载后立即检查更新，检测到新 SW 自动刷新
 function PwaUpdater() {
   const {
-    needRefresh: [needRefresh, setNeedRefresh],
+    needRefresh: [needRefresh],
     updateServiceWorker,
   } = useRegisterSW({
-    // 自动更新模式下，SW 检测到新版本会自动 skipWaiting
-    // 这里仅用于在更新完成后提示用户刷新页面
+    // 页面加载后立即检查更新
+    immediate: true,
     onRegisteredSW(swUrl, r) {
       if (r) {
         // 定期检查更新（每 60 分钟）
@@ -28,19 +28,14 @@ function PwaUpdater() {
     },
   });
 
-  if (!needRefresh) return null;
+  // 检测到新 SW 后静默自动刷新，不弹出提示条
+  useEffect(() => {
+    if (needRefresh) {
+      updateServiceWorker(true);
+    }
+  }, [needRefresh, updateServiceWorker]);
 
-  return (
-    <div className="fixed bottom-4 left-4 right-4 z-50 flex items-center justify-between rounded-xl bg-green-800 px-4 py-3 text-white shadow-lg">
-      <span className="text-sm">有新版本可用</span>
-      <button
-        onClick={() => updateServiceWorker(true)}
-        className="rounded-lg bg-white px-3 py-1 text-sm font-medium text-green-800 active:bg-green-100"
-      >
-        刷新
-      </button>
-    </div>
-  );
+  return null;
 }
 
 ReactDOM.createRoot(document.getElementById('root')).render(
